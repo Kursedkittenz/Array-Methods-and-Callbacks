@@ -126,33 +126,90 @@ Hint: Investigate your data to find "team initials"!
 Hint: use `.reduce` */
 
 function getCountryWins(data,initial) {
-
-    /* code here */
-
+    let myData = data.map(a => a["Home Team Goals"] > a["Away Team Goals"] ? [a["Home Team Name"] , a["Home Team Initials"]] : [a["Away Team Name"], a["Away Team Initials"]])
+    //console.log(myData)
+    let count = 0
+    for(let x in myData){
+        if(myData[x][1] == initial){
+            count+=1
+        }
+    }
+    return console.log(count)
 }
 
 
-
+//getCountryWins(fifaData,"URU")
 
 /* 💪💪💪💪💪 Stretch 2: 💪💪💪💪💪 
 Write a function called getGoals() that accepts a parameter `data` and returns the team with the most goals score per appearance (average goals for) in the World Cup finals */
 
 function getGoals(data) {
 
-    /* code here */
+    let myData = data.filter(a => a["Stage"] === "Final").map(a => [a["Home Team Name"],a["Home Team Goals"],a["Away Team Name"], a["Away Team Goals"]])
+    //console.log(myData)
+    let goals = {}
+    let highest = 0
+    
+    for(let x in myData){//create new object with country, goals, count and average
+        //console.log(myData[x][0])
+        if(goals[myData[x][0]] === undefined){ //create new obj with goals, count, avg if country does not exist
+            goals[myData[x][0]] = {"Goals": myData[x][1],"Count": 1,"Avg": myData[x][1]}
+        }else{//increment goal, count, calc avg
+            goals[myData[x][0]]["Goals"] += myData[x][1]
+            goals[myData[x][0]]['Count'] += 1
+            goals[myData[x][0]]['Avg'] = (goals[myData[x][0]]["Goals"]/goals[myData[x][0]]['Count']).toFixed(2)
+        }
+        if(goals[myData[x][2]] === undefined){
+            goals[myData[x][2]] = {"Goals": myData[x][3], "Count": 1,"Avg": myData[x][3]}
+        }else{
+            goals[myData[x][2]]["Goals"] += myData[x][3]
+            goals[myData[x][2]]['Count'] += 1
+            goals[myData[x][2]]['Avg'] = (goals[myData[x][2]]["Goals"]/goals[myData[x][2]]['Count']).toFixed(2)
+        }
+     }
+     let win
+     for(let y in goals){//loop for highest avg
+        if(goals[y]["Avg"]>highest){
+            win = y
+            highest = goals[y]["Avg"]
+        }
+    }
+    //console.log(goals)
+    return win
 
 }
 
+//console.log(getGoals(fifaData))
 
 /* 💪💪💪💪💪 Stretch 3: 💪💪💪💪💪
 Write a function called badDefense() that accepts a parameter `data` and calculates the team with the most goals scored against them per appearance (average goals against) in the World Cup finals */
 
-function badDefense(/* code here */) {
+function badDefense(data) {
 
-    /* code here */
-
+    let myData = data.filter(a => a["Stage"] === "Final").map(a => [a["Home Team Name"], a["Home Team Goals"], a["Away Team Name"], a["Away Team Goals"]])
+    console.log(myData)
+    let defense = {}
+    for(let x in myData){
+        if(defense[myData[x][0]] === undefined){
+            defense[myData[x][0]] = {'Goals Against': myData[x][3], 'Count': 1, "Avg": myData[x][3]}
+        }else{
+            defense[myData[x][0]]['Goals Against'] += myData[x][3]
+            defense[myData[x][0]]['Count'] += 1
+            defense[myData[x][0]]['Avg'] = (defense[myData[x][0]]['Goals Against']/defense[myData[x][0]]['Count']).toFixed(2)
+        }
+        if(defense[myData[x][2]] === undefined){
+            defense[myData[x][2]] = {'Goals Against': myData[x][1], 'Count': 1, "Avg": myData[x][1]}
+        }else{
+            defense[myData[x][2]]['Goals Against'] += myData[x][1]
+            defense[myData[x][2]]['Count'] += 1
+            defense[myData[x][2]]['Avg'] = (defense[myData[x][2]]['Goals Against']/defense[myData[x][2]]['Count']).toFixed(2)
+            
+        }
+    }
+    console.log(defense)
 }
 
+badDefense(fifaData)
 
 /* If you still have time, use the space below to work on any stretch goals of your chosing as listed in the README file. */
 
